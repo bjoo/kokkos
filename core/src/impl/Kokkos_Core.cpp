@@ -255,12 +255,14 @@ void initialize_internal(const InitArguments& args) {
 
 #if defined( KOKKOS_ENABLE_SYCL )
   if( std::is_same< Kokkos::Experimental::SYCL , Kokkos::DefaultExecutionSpace >::value || 0 < use_gpu ) {
-    if (use_gpu > -1) {
-      Kokkos::Experimental::SYCL::impl_initialize( Kokkos::Experimental::SYCL::SelectDevice( use_gpu ));
-    }
-    else {
-      Kokkos::Experimental::SYCL::impl_initialize();
-    }
+	  if (use_gpu > -1) {
+          std::cerr << "Use GPU >-1 branch " << std::endl;
+ 		  Kokkos::Experimental::SYCL::impl_initialize( Kokkos::Experimental::SYCL::SelectDevice( use_gpu ));
+      }
+      else {
+    	  std::cerr << "Use GPU <=-1 branch " << std::endl;
+        Kokkos::Experimental::SYCL::impl_initialize(Kokkos::Experimental::SYCL::SelectDevice());
+      }
   }
 #endif
 
@@ -792,6 +794,8 @@ void initialize(int& narg, char* arg[]) {
   arguments.ndevices         = ndevices;
   arguments.skip_device      = skip_device;
   arguments.disable_warnings = disable_warnings;
+
+  std::cerr << "Calling Initialize internal with arguments.device_id =" << arguments.device_id << std::endl;
   Impl::initialize_internal(arguments);
 }
 

@@ -137,13 +137,13 @@ public:
    */
   struct SelectDevice {
     int sycl_device_id ;
-    SelectDevice() : sycl_device_id(1) {}
-    explicit SelectDevice( int id ) : sycl_device_id( id+1 ) {}
+    SelectDevice() : sycl_device_id(0) {}
+    explicit SelectDevice( int id ) : sycl_device_id( id ) {}
   };
 
   int          sycl_device() const;
 
-  static void impl_initialize( const SelectDevice = SelectDevice());
+  static void impl_initialize( const SelectDevice config);
 
   static int impl_is_initialized();
 

@@ -138,8 +138,40 @@ SYCLInternal & SYCLInternal::singleton()
 
 }
 
+void printDeviceInfo(size_t i, cl::sycl::device& d)
+{
+   auto name = d.template get_info<cl::sycl::info::device::name>();
+   auto driver_version = d.template get_info<cl::sycl::info::device::driver_version>();
+   bool is_accelerator = d.is_accelerator() || d.is_gpu();
+
+   std::cout << "Device " << i << " : " << name <<  " Driver Version: "
+             << driver_version << " Is accelerator: " 
+	     <<( is_accelerator ? "YES" : "NO" )<< std::endl;
+}
+
+cl::sycl::queue* selectDevice(int device_id=0) 
+{  
+   std::vector<cl::sycl::device> devices;	
+   devices.clear();
+   auto dlist = cl::sycl::device::get_devices();
+   devices.insert(devices.end(),dlist.begin(),dlist.end());
+   std::cout << "The system contains " << devices.size() << " devices" << std::endl;
+   for(size_t i=0; i < devices.size(); i++) {
+     cl::sycl::device d = devices[i];
+     printDeviceInfo(i,d);
+   }
+   std::cout << "Selecting device: " << device_id << std::endl;
+   cl::sycl::device d = devices[device_id];
+   printDeviceInfo(device_id,d);
+
+   cl::sycl::queue* ret_val = new cl::sycl::queue(d);
+   return ret_val;
+}
+
 void SYCLInternal::initialize( int sycl_device_id  )
 {
+  std::cerr << "Calling inititalize with sycl_device_id = " << sycl_device_id << std::endl;
+
   if ( was_finalized ) Kokkos::abort("Calling SYCL::initialize after SYCL::finalize is illegal\n");
 
   if ( is_initialized() ) return;
@@ -168,13 +200,10 @@ void SYCLInternal::initialize( int sycl_device_id  )
 
     //const struct syclDeviceProp & syclProp =
     //  dev_info.m_syclProp[ sycl_device_id ];
+    m_queue = selectDevice(sycl_device_id);
+    m_syclDev = sycl_device_id;
 
-    m_syclDev = sycl_device_id ;
-
-    //Kokkos::Impl::sycl_device_synchronize();
-
-    m_queue = new cl::sycl::queue(cl::sycl::cpu_selector());
-/*
+/*	    
     // Query what compute capability architecture a kernel executes:
     m_syclArch = sycl_kernel_arch();
     if ( m_syclArch != syclProp.major * 100 + syclProp.minor * 10 ) {
@@ -375,6 +404,7 @@ int SYCL::impl_is_initialized()
 
 void SYCL::impl_initialize( const SYCL::SelectDevice config )
 {
+  std::cerr << "In impl_iniitialize with config.sycl_device_id = " << config.sycl_device_id  <<std::endl;
   Impl::SYCLInternal::singleton().initialize( config.sycl_device_id );
 
   #if defined(KOKKOS_ENABLE_PROFILING)
