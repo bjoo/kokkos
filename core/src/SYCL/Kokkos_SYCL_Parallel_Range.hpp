@@ -19,7 +19,9 @@ public:
 // inline
   void execute() //const
   {
+#ifdef NO_LAMBDA
 	  std::cerr << "in execute: ptr_d =  " << m_functor.ptr_d << std::endl;
+#endif
 	  Kokkos::Experimental::Impl::sycl_launch(*this);
     }
 
