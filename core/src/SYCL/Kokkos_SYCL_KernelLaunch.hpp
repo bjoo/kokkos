@@ -21,17 +21,6 @@ void sycl_launch(Driver driver_in) {
 #endif
 
 
-#ifdef DO_LOCALCOPY
-      bool localcopy = true;
-#else
-      bool localcopy = false;
-#endif
-
-#ifdef NO_LAMBDA
-      bool printfunctor=true;
-#else
-      bool printfunctor=false;
-#endif
       q->submit([&](cl::sycl::handler& cgh) {
 	  cl::sycl::stream out(1024,256,cgh);
 
@@ -51,15 +40,11 @@ void sycl_launch(Driver driver_in) {
 #endif
 	     	 }
 
-		 if ( localcopy  )  {
-		    if ( idx == 2 ) {  out << "Calling Localfunctor " << cl::sycl::endl; }
-		    localfunctor(idx,out);
-
-		 }
-		 else {
-		    if ( idx == 2 ) { out << "Calling driver_in.m_functor " << cl::sycl::endl; }
-		    driver_in.m_functor(idx,out);
-		 }
+		 if ( idx == 2 ) {  out << "Calling Localfunctor " << cl::sycl::endl; }
+		 localfunctor(idx,out);
+		    
+		 // if ( idx == 2 ) { out << "Calling driver_in.m_functor " << cl::sycl::endl; }
+		 //   driver_in.m_functor(idx,out);
 
          });
       });
