@@ -58,7 +58,7 @@ namespace Kokkos {
 ///   \c float, \c double, and <tt>long double</tt>.  The latter is
 ///   currently forbidden in CUDA device kernels.
 template <class RealType>
-class complex {
+class alignas(2*sizeof(RealType)) complex {
  private:
   RealType re_, im_;
 
