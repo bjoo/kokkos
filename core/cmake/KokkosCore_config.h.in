@@ -87,6 +87,8 @@
 #cmakedefine KOKKOS_ARCH_PASCAL60 1
 #cmakedefine KOKKOS_ARCH_PASCAL61 1
 #cmakedefine KOKKOS_ARCH_VOLTA70 1
+#cmakedefine KOKKOS_ARCH_VEGA 1
+#cmakedefine KOKKOS_ARCH_GFX906 1
 
 // TODO: These are currently not used in Kokkos.  Should they be removed?
 #cmakedefine KOKKOS_ENABLE_MPI
@@ -96,4 +98,7 @@
 #cmakedefine KOKKOS_USING_DEPRECATED_VIEW
 #cmakedefine KOKKOS_ENABLE_CXX11
 
+#ifdef KOKKOS_ENABLE_HIP
+#cmakedefine KOKKOS_ENABLE_HIP_ATOMICS 1
+#endif
 #endif // !defined(KOKKOS_FOR_SIERRA)

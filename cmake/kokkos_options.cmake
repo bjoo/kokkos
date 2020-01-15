@@ -17,6 +17,7 @@ list(APPEND KOKKOS_INTERNAL_ENABLE_OPTIONS_LIST
      HPX
      Cuda
      ROCm
+     HIP
      HWLOC
      MEMKIND
      LIBRT
@@ -106,7 +107,9 @@ list(APPEND KOKKOS_ARCH_LIST
      Pascal61        # (GPU) NVIDIA Pascal generation CC 6.1
      Volta70         # (GPU) NVIDIA Volta generation CC 7.0
      Volta72         # (GPU) NVIDIA Volta generation CC 7.2
-     Turing75         # (GPU) NVIDIA Turing generation CC 7.5
+     Turing75        # (GPU) NVIDIA Turing generation CC 7.5
+     Vega            #  (GPU) AMD Vega
+     GFX906          #  (GPU) AMD GFX906 (MI60)
     )
 
 # List of possible device architectures.
@@ -121,6 +124,7 @@ list(APPEND KOKKOS_DEVICES_LIST
     HPX           # HPX
     Serial        # serial
     ROCm          # Relocatable device code
+    HIP		  # AMD-GPU HIP
     )
 
 # List of possible TPLs for Kokkos
@@ -259,6 +263,7 @@ ELSE()
   set_kokkos_default_default(QTHREAD OFF)
   set_kokkos_default_default(HPX OFF)
   set_kokkos_default_default(CUDA OFF)
+  set_kokkos_default_default(HIP OFF)
   set_kokkos_default_default(ROCM OFF)
 ENDIF()
 
@@ -270,6 +275,7 @@ set(KOKKOS_ENABLE_PTHREAD ${KOKKOS_INTERNAL_ENABLE_PTHREAD_DEFAULT} CACHE BOOL "
 set(KOKKOS_ENABLE_QTHREADS ${KOKKOS_INTERNAL_ENABLE_QTHREADS_DEFAULT} CACHE BOOL "Enable Qthreads support in Kokkos.")
 set(KOKKOS_ENABLE_HPX ${KOKKOS_INTERNAL_ENABLE_HPX_DEFAULT} CACHE BOOL "Enable HPX support in Kokkos.")
 set(KOKKOS_ENABLE_CUDA ${KOKKOS_INTERNAL_ENABLE_CUDA_DEFAULT} CACHE BOOL "Enable CUDA support in Kokkos.")
+set(KOKKOS_ENABLE_HIP ${KOKKOS_INTERNAL_ENABLE_HIP_DEFAULT} CACHE BOOL "Enable HIP support in Kokkos.")
 set(KOKKOS_ENABLE_ROCM ${KOKKOS_INTERNAL_ENABLE_ROCM_DEFAULT} CACHE BOOL "Enable ROCm support in Kokkos.")
 
 
@@ -371,6 +377,12 @@ set(KOKKOS_ENABLE_CUDA_RELOCATABLE_DEVICE_CODE ${KOKKOS_INTERNAL_ENABLE_CUDA_REL
 set(KOKKOS_ENABLE_CUDA_LAMBDA ${KOKKOS_INTERNAL_ENABLE_CUDA_LAMBDA_DEFAULT} CACHE BOOL "Enable lambdas for CUDA. (cuda option)")
 
 
+#-------------------------------------------------------------------------------
+# ----------------------------- KOKKOS HIP OPTIONS -----------------------------
+#-------------------------------------------------------------------------------
+IF( KOKKOS_ENABLE_HIP ) 
+  set(KOKKOS_IMPL_HIP_CLANG_WORKAROUND 1)
+ENDIF()
 #-------------------------------------------------------------------------------
 #------------------------------- KOKKOS_HPX_OPTIONS ----------------------------
 #-------------------------------------------------------------------------------
