@@ -1044,7 +1044,11 @@ ifeq ($(KOKKOS_INTERNAL_USE_HIP), 1)
     tmp := $(call kokkos_append_header,"\#define KOKKOS_ARCH_GFX901")
     KOKKOS_INTERNAL_HIP_ARCH_FLAG := --amdgpu-target=gfx901
   endif
-
+ ifeq ($(KOKKOS_INTERNAL_USE_ARCH_GFX906), 1)
+    tmp := $(call kokkos_append_header,"\#define KOKKOS_ARCH_HIP 901")
+    tmp := $(call kokkos_append_header,"\#define KOKKOS_ARCH_GFX901")
+    KOKKOS_INTERNAL_HIP_ARCH_FLAG := --amdgpu-target=gfx906
+  endif
   KOKKOS_SRC += $(wildcard $(KOKKOS_PATH)/core/src/HIP/*.cpp)
   ifeq ($(KOKKOS_INTERNAL_ENABLE_ETI), 1)
     KOKKOS_SRC += $(wildcard $(KOKKOS_ETI_PATH)/HIP/*.cpp)
