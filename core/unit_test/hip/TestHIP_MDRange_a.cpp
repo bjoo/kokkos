@@ -1,3 +1,4 @@
+
 /*
 //@HEADER
 // ************************************************************************
@@ -42,5 +43,4 @@
 */
 
 #include <hip/TestHIP_Category.hpp>
-
-#include <TestViewAPI_a.hpp>
+#include <TestMDRange_a.hpp>
